@@ -14,7 +14,7 @@ function App() {
       .catch(error => {
         console.error('Error fetching user data:', error);
       });
-  }, [);
+  }, []);
 
   return (
     <div className="app-container">
