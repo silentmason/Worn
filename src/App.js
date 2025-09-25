@@ -1,44 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './App.css'; // Import CSS file
 
 function App() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [user, setUser] = useState(null);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      alert('Please select a file');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-
-    try {
-      const response = await axios.post('http://localhost:5000/upload', formData, { // Replace with your backend URL if different
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+  useEffect(() => {
+    // Fetch user data from backend (replace with actual Discord login logic)
+    axios.get('http://localhost:5000/user') // Replace with your backend URL
+      .then(response => {
+        setUser(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching user data:', error);
       });
-
-      if (response.status === 200) {
-        alert(response.data.message); // e.g., "File uploaded successfully"
-      } else {
-        alert('Upload failed');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Upload failed');
-    }
-  };
+  }, [);
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload</button>
+    <div className="app-container">
+      <header className="app-header">
+        <div className="user-profile">
+          {user && (
+            <>
+              <span className="username">{user.username}</span>
+              <img src={user.profile_picture} alt="Profile" className="profile-picture" />
+            </>
+          )}
+        </div>
+      </header>
+      <main className="app-main">
+        <h1>Welcome to the Cool Text Page!</h1>
+        <p>This is a placeholder for your awesome content.</p>
+      </main>
     </div>
   );
 }
